@@ -27,7 +27,7 @@ post-install:
 	@./scripts/hacks
 
 tools:
-	@docker run \
+		@docker run \
 		--rm \
 		--interactive \
 		--tty \
@@ -40,7 +40,10 @@ tools:
 		--volume homelab-tools-cache:/root/.cache \
 		--volume homelab-tools-nix:/nix \
 		--workdir $(shell pwd) \
-		docker.io/nixos/nix nix --experimental-features 'nix-command flakes' develop
+		--entrypoint /bin/sh \
+		docker.io/nixos/nix -c "\
+		git config --global --add safe.directory $(shell pwd) && \
+		nix --experimental-features 'nix-command flakes' develop"
 
 test:
 	make -C test
